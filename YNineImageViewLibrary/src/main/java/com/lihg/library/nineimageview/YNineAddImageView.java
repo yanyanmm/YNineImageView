@@ -82,6 +82,7 @@ public class YNineAddImageView extends YNineImageView {
                     String image = imageView.getImage();
                     removeView(imageView);
                     mImageViews.remove(imageView);
+                    calculateCellSize();
                     layoutSubViews();
                     if (mOnRemoveClickListener != null) {
                         mOnRemoveClickListener.onRemove(image);

@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(YNineImageView container, int position) {
                 Log.i("YNineAddImageView", "onItemClick");
+                PictureSelector.create(MainActivity.this).themeStyle(R.style.picture_default_style).openExternalPreview(position, mLocalMedias);
             }
         });
         mAddImageView.getAddImageView().setOnClickListener(new View.OnClickListener() {
