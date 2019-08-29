@@ -11,6 +11,10 @@ import java.util.List;
 
 public class YNineAddImageView extends YNineImageView {
 
+    public interface OnRemoveClickListener{
+        void onRemove(String image);
+    }
+
     private int mMaxTop, mMaxLeft;
 
     private boolean isMoving = false;
@@ -21,6 +25,9 @@ public class YNineAddImageView extends YNineImageView {
     private ImageView mAddImageView;
     //移除按钮
     private ImageView mRemoveImageView;
+
+    //点击事件
+    private OnRemoveClickListener mOnRemoveClickListener;
 
     public YNineAddImageView(Context context) {
         this(context, null);
@@ -72,13 +79,21 @@ public class YNineAddImageView extends YNineImageView {
                 int position = (int)v.getTag();
                 if (position >= 0 && position < mImageViews.size()) {
                     YImageView imageView = mImageViews.get(position);
+                    String image = imageView.getImage();
                     removeView(imageView);
                     mImageViews.remove(imageView);
                     layoutSubViews();
+                    if (mOnRemoveClickListener != null) {
+                        mOnRemoveClickListener.onRemove(image);
+                    }
                 }
                 mRemoveImageView.setVisibility(View.GONE);
             }
         });
+    }
+
+    public void setOnRemoveClickListener(OnRemoveClickListener listener) {
+        this.mOnRemoveClickListener = listener;
     }
 
     @Override

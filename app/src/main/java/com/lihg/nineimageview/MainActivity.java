@@ -87,6 +87,18 @@ public class MainActivity extends AppCompatActivity {
                         .forResult(PictureConfig.CHOOSE_REQUEST);
             }
         });
+        mAddImageView.setOnRemoveClickListener(new YNineAddImageView.OnRemoveClickListener() {
+            @Override
+            public void onRemove(String image) {
+                for (LocalMedia media : mLocalMedias) {
+                    String img = media.isCompressed() ? media.getCompressPath() : media.getPath();
+                    if (img.equals(image)) {
+                        mLocalMedias.remove(media);
+                        return;
+                    }
+                }
+            }
+        });
     }
 
     @Override

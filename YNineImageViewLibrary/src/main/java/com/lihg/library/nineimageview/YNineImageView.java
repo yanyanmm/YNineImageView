@@ -189,8 +189,8 @@ public class YNineImageView extends RelativeLayout {
         this.mImageLoader = imageLoader;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
-        mOnItemClickListener = onItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mOnItemClickListener = listener;
     }
 
     public void setImages(List<String> images) {
