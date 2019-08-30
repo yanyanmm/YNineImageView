@@ -50,32 +50,30 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 4; i++) {
             videoUrls.add(url2);
         }
-
+        final List<String> imageAddUrls = new ArrayList<String>();
+        imageAddUrls.add("http://b-ssl.duitang.com/uploads/item/201510/21/20151021125719_2aETz.jpeg");
+        imageAddUrls.add("http://img.chemcp.com/201811/1748702018111811165785071.jpg");
+        imageAddUrls.add("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2376858034,1145412955&fm=26&gp=0.jpg");
+        imageAddUrls.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566927420102&di=522b25a7b5964f351caee9124244c98c&imgtype=0&src=http%3A%2F%2Fimg007.hc360.cn%2Fg3%2FM02%2F22%2F87%2FwKhQvlITV0KEekGAAAAAAMT0OHU969.jpg");
+        imageAddUrls.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567522198&di=77b2d6e34d9d643641b4f4cd2ed787b9&imgtype=jpg&er=1&src=http%3A%2F%2Fimg2.ph.126.net%2FaJr5XW21dSrFwC-D8UYvJg%3D%3D%2F1697857059618892865.jpg");
         YNineImageView nineImageView = findViewById(R.id.nineImageView);
         nineImageView.setImageLoader(mNineImageLoader);
         nineImageView.setOnItemClickListener(new YNineImageView.OnItemClickListener() {
             @Override
             public void onItemClick(YNineImageView container, int position) {
                 container.setPadding(30, 0, 0, 0);
-                container.setImages(videoUrls, 1);
+                container.setImages(imageAddUrls, 1);
             }
         });
         nineImageView.setImages(imageUrls);
 
-        List<String> imageAddUrls = new ArrayList<String>();
-        imageAddUrls.add("http://b-ssl.duitang.com/uploads/item/201510/21/20151021125719_2aETz.jpeg");
-        imageAddUrls.add("http://img.chemcp.com/201811/1748702018111811165785071.jpg");
-        imageAddUrls.add("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2376858034,1145412955&fm=26&gp=0.jpg");
-        imageAddUrls.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566927420102&di=522b25a7b5964f351caee9124244c98c&imgtype=0&src=http%3A%2F%2Fimg007.hc360.cn%2Fg3%2FM02%2F22%2F87%2FwKhQvlITV0KEekGAAAAAAMT0OHU969.jpg");
-        imageAddUrls.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567522198&di=77b2d6e34d9d643641b4f4cd2ed787b9&imgtype=jpg&er=1&src=http%3A%2F%2Fimg2.ph.126.net%2FaJr5XW21dSrFwC-D8UYvJg%3D%3D%2F1697857059618892865.jpg");
         mAddImageView = findViewById(R.id.addImageView);
-        //mAddImageView.setImages(imageAddUrls);
-        mAddImageView.setImageLoader(mNineImageLoader);
+        mAddImageView.setImageLoader(mNineAddImageLoader);
         mAddImageView.setOnItemClickListener(new YNineImageView.OnItemClickListener() {
             @Override
             public void onItemClick(YNineImageView container, int position) {
                 Log.i("YNineAddImageView", "onItemClick");
-                PictureSelector.create(MainActivity.this).themeStyle(R.style.picture_default_style).openExternalPreview(position, mLocalMedias);
+                PictureSelector.create(MainActivity.this).themeStyle(R.style.picture_default_style).openExternalPreview(position, mAddImageView.<LocalMedia>getImages());
             }
         });
         mAddImageView.getAddImageView().setOnClickListener(new View.OnClickListener() {
@@ -84,20 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 PictureSelector.create(MainActivity.this)
                         .openGallery(PictureMimeType.ofAll())
                         //.theme(R.style.picture_white_style)
-                        .selectionMedia(mLocalMedias)
+                        .selectionMedia(mAddImageView.<LocalMedia>getImages())
                         .forResult(PictureConfig.CHOOSE_REQUEST);
-            }
-        });
-        mAddImageView.setOnRemoveClickListener(new YNineAddImageView.OnRemoveClickListener() {
-            @Override
-            public void onRemove(String image) {
-                for (LocalMedia media : mLocalMedias) {
-                    String img = media.isCompressed() ? media.getCompressPath() : media.getPath();
-                    if (img.equals(image)) {
-                        mLocalMedias.remove(media);
-                        return;
-                    }
-                }
             }
         });
     }
@@ -123,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             images.add(media.getPath());
                         }
                     }
-                    mAddImageView.setImages(images);
+                    mAddImageView.setImages(mLocalMedias);
                     break;
             }
         }
@@ -131,12 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
     private YNineImageView.NineImageLoader mNineImageLoader = new YNineImageView.NineImageLoader() {
         @Override
-        public void displayImage(YNineImageView container, final YNineImageView.YImageView imageView, String url) {
+        public void displayImage(YNineImageView container, final YNineImageView.YImageView imageView, Object image) {
             if (container.getType() == 1) {
                 imageView.setCenterImage(R.mipmap.play);
             }
+            String imageUrl = (String)image;
             if (container.singleImage()) {
-                Glide.with(container.getContext()).load(url).listener(new RequestListener<Drawable>() {
+                Glide.with(container.getContext()).load(imageUrl).listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
@@ -148,10 +135,22 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).into(imageView);
             } else {
-                RequestOptions options = new RequestOptions();
-                options.centerCrop();
-                Glide.with(container.getContext()).load(url).apply(options).into(imageView);
+                RequestOptions options = new RequestOptions().centerCrop();
+                Glide.with(container.getContext()).load(imageUrl).apply(options).into(imageView);
             }
+        }
+    };
+
+    private YNineImageView.NineImageLoader mNineAddImageLoader = new YNineImageView.NineImageLoader() {
+        @Override
+        public void displayImage(YNineImageView container, final YNineImageView.YImageView imageView, Object image) {
+            if (container.getType() == 1) {
+                imageView.setCenterImage(R.mipmap.play);
+            }
+            LocalMedia media = (LocalMedia)image;
+            String imageUrl = media.isCompressed() ? media.getCompressPath() : media.getPath();
+            RequestOptions options = new RequestOptions().centerCrop();
+            Glide.with(container.getContext()).load(imageUrl).apply(options).into(imageView);
         }
     };
 }

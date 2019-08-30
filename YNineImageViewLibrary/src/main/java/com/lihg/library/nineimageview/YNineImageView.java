@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class YNineImageView extends RelativeLayout {
 
-    public interface NineImageLoader{
-        void displayImage(YNineImageView container, YImageView imageView, String image);
+    public interface NineImageLoader {
+        void displayImage(YNineImageView container, YImageView imageView, Object image);
     }
 
     public interface OnItemClickListener{
@@ -38,7 +38,7 @@ public class YNineImageView extends RelativeLayout {
 
         private int position;
 
-        private String image;
+        private Object image;
 
         public YImageView(Context context) {
             this(context, null);
@@ -62,11 +62,11 @@ public class YNineImageView extends RelativeLayout {
             this.position = position;
         }
 
-        public String getImage() {
+        public Object getImage() {
             return image;
         }
 
-        public void setImage(String image) {
+        public void setImage(Object image) {
             this.image = image;
         }
 
@@ -113,8 +113,8 @@ public class YNineImageView extends RelativeLayout {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             if (mBitmap != null) {
-                float left = (this.getMeasuredWidth() - mBitmap.getWidth()) / 2;
-                float top = (this.getMeasuredHeight() - mBitmap.getHeight()) / 2;
+                float left = (this.getMeasuredWidth() - mBitmap.getWidth()) / 2f;
+                float top = (this.getMeasuredHeight() - mBitmap.getHeight()) / 2f;
                 canvas.drawBitmap(mBitmap, left, top, mPaint);
             }
         }
@@ -193,11 +193,11 @@ public class YNineImageView extends RelativeLayout {
         mOnItemClickListener = listener;
     }
 
-    public void setImages(List<String> images) {
+    public <T> void setImages(List<T> images) {
         this.setImages(images, 0);
     }
 
-    public void setImages(List<String> images, int type) {
+    public <T> void setImages(List<T> images, int type) {
         this.clear();
         mType = type;
         if (images != null && images.size() > 0) {
@@ -227,10 +227,11 @@ public class YNineImageView extends RelativeLayout {
         return mType;
     }
 
-    public List<String> getImageUrls() {
-        List<String> images = new ArrayList<String>();
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getImages() {
+        List<T> images = new ArrayList<T>();
         for (YImageView imageView : mImageViews) {
-            images.add(imageView.getImage());
+            images.add((T)imageView.getImage());
         }
         return images;
     }
