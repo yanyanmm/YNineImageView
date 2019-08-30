@@ -14,6 +14,7 @@ public class YNineAddImageView extends YNineImageView {
     private int mMaxTop, mMaxLeft;
 
     private boolean isMoving = false;
+    private boolean canMoved = false;
     private int mLastX, mLastY;
     private int mCurrentPosition = 0;
 
@@ -145,6 +146,7 @@ public class YNineAddImageView extends YNineImageView {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     isMoving = false;
+                    canMoved = false;
                     mCurrentPosition = imageView.getPosition();
                     mRemoveImageView.setVisibility(View.GONE);
                     mLastX = (int) event.getRawX();
@@ -152,13 +154,14 @@ public class YNineAddImageView extends YNineImageView {
                     return false;
                 case MotionEvent.ACTION_MOVE:
                     isMoving = true;
-                    if (mRemoveImageView.getVisibility() == View.GONE) {
+                    if (canMoved) {
+                        mRemoveImageView.setVisibility(View.GONE);
                         imageView.bringToFront();
                         LayoutParams param = (LayoutParams) imageView.getLayoutParams();
                         int dx = (int) event.getRawX() - mLastX;
                         int dy = (int) event.getRawY() - mLastY;
-                        int left = max(min(param.leftMargin + dx, mMaxLeft),0);
-                        int top = max(min(param.topMargin + dy, mMaxTop),0);
+                        int left = max(min(param.leftMargin + dx, mMaxLeft), 0);
+                        int top = max(min(param.topMargin + dy, mMaxTop), 0);
                         int position = getPosition(left, top);
                         if (position >= 0 && position != mCurrentPosition) {
                             mCurrentPosition = position;
@@ -175,11 +178,13 @@ public class YNineAddImageView extends YNineImageView {
                         imageView.setLayoutParams(param);
                         mLastX = (int) event.getRawX();
                         mLastY = (int) event.getRawY();
+                        getParent().requestDisallowInterceptTouchEvent(true);
                     }
                     return true;
                 case MotionEvent.ACTION_UP:
-                    if (isMoving) {
+                    if (canMoved) {
                         layoutSubViews();
+                        getParent().requestDisallowInterceptTouchEvent(false);
                     }
                     return isMoving;
             }
@@ -201,6 +206,7 @@ public class YNineAddImageView extends YNineImageView {
                 mRemoveImageView.setLayoutParams(params);
                 mRemoveImageView.setTag(imageView.getPosition());
                 mRemoveImageView.bringToFront();
+                canMoved = true;
             }
             return true;
         }

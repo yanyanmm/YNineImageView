@@ -5,36 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <com.lihg.library.nineimageview.YNineAddImageView
-        android:id="@+id/addImageView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        app:nine_imagePadding="6dp"
-        app:layout_constraintTop_toTopOf="parent" />
-    <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <com.lihg.library.nineimageview.YNineImageView
-            android:id="@+id/nineImageView"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="10dp"
-            android:padding="3dp"
-            android:background="@color/colorPrimary"
-            />
-    </LinearLayout>
+            android:orientation="vertical">
+            <com.lihg.library.nineimageview.YNineAddImageView
+                android:id="@+id/addImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                app:nine_imagePadding="6dp"
+                app:layout_constraintTop_toTopOf="parent" />
+            <com.lihg.library.nineimageview.YNineImageView
+                android:id="@+id/nineImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="10dp"
+                android:padding="3dp"
+                android:background="@color/colorPrimary"
+                />
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
