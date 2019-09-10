@@ -98,12 +98,12 @@ public class YNineImageView extends RelativeLayout {
             if (this.getScaleType() != ScaleType.FIT_XY) {
                 this.setScaleType(ScaleType.FIT_XY);
             }
-            int imgW = this.getWidth() - this.getPaddingLeft() - this.getPaddingRight();
-            int imgH = this.getHeight() - this.getPaddingTop() - this.getPaddingBottom();
+            ViewGroup.LayoutParams params = this.getLayoutParams();
+            int imgW = params.width - this.getPaddingLeft() - this.getPaddingRight();
+            int imgH = params.height - this.getPaddingTop() - this.getPaddingBottom();
             float scale = srcWidth > srcHeight ? (imgW / (float)srcWidth) : (imgH / (float)srcHeight);
             int w = Math.round(srcWidth * scale);
             int h = Math.round(srcHeight * scale);
-            ViewGroup.LayoutParams params = this.getLayoutParams();
             params.width = w + this.getPaddingLeft() + this.getPaddingRight();
             params.height = h + this.getPaddingTop() + this.getPaddingBottom();
             this.setLayoutParams(params);
