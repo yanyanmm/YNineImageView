@@ -255,10 +255,10 @@ public class YNineImageView extends RelativeLayout {
         if (width > 0) {
             int padding = getPaddingStart() + getPaddingEnd();
             mImageWidth = mImageHeight = (width - padding - mImagePadding * 2) / 3;
-        }
-        if (mImageViews.size() == 1) {
-            mImageWidth = mImageWidth * 2 + mImagePadding;
-            mImageHeight = mImageHeight * 2 + mImagePadding;
+            if (mImageViews.size() == 1) {
+                mImageWidth = mImageWidth * 2 + mImagePadding;
+                mImageHeight = mImageHeight * 2 + mImagePadding;
+            }
         }
         mColumnCount = mImageViews.size() == 4 ? 2 : 3;
     }
