@@ -130,7 +130,7 @@ public class YNineImageView extends RelativeLayout {
     }
 
     //最多控件数量
-    protected static final int MAX_COUNT = 9;
+    protected int mMaxCount = 9;
 
     //自定义类型标记
     protected int mType = 0;
@@ -177,6 +177,14 @@ public class YNineImageView extends RelativeLayout {
         typedArray.recycle();
     }
 
+    public int getMaxCount() {
+        return mMaxCount;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.mMaxCount = maxCount;
+    }
+
     public int getImagePadding() {
         return mImagePadding;
     }
@@ -201,7 +209,7 @@ public class YNineImageView extends RelativeLayout {
         this.clear();
         mType = type;
         if (images != null && images.size() > 0) {
-            int n = min(images.size(), MAX_COUNT);
+            int n = min(images.size(), mMaxCount);
             for (int i = 0; i < n; i++) {
                 YImageView imageView = new YImageView(getContext());
                 imageView.setImage(images.get(i));

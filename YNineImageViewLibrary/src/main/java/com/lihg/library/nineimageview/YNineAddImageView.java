@@ -17,6 +17,7 @@ public class YNineAddImageView extends YNineImageView {
     private boolean canMoved = false;
     private int mLastX, mLastY;
     private int mCurrentPosition = 0;
+    private int mClickRadius = 0;
 
     //添加按钮
     private ImageView mAddImageView;
@@ -35,6 +36,7 @@ public class YNineAddImageView extends YNineImageView {
         super(context, attrs, defStyleAttr);
 
         this.setPadding(mImagePadding, mImagePadding, mImagePadding, mImagePadding);
+        mClickRadius = dp2px(3);
 
         //设置添加按钮
         this.setupAddView();
@@ -83,6 +85,14 @@ public class YNineAddImageView extends YNineImageView {
         });
     }
 
+    public int getClickRadius() {
+        return mClickRadius;
+    }
+
+    public void setClickRadius(int radius) {
+        this.mClickRadius = radius;
+    }
+
     @Override
     public <T> void setImages(List<T> images, int type) {
         super.setImages(images, type);
@@ -111,7 +121,7 @@ public class YNineAddImageView extends YNineImageView {
         super.layoutSubViews(loadImage);
 
         int count = mImageViews.size();
-        if (count < MAX_COUNT) {
+        if (count < mMaxCount) {
             mAddImageView.setVisibility(View.VISIBLE);
             LayoutParams params = new LayoutParams(mImageWidth, mImageHeight);
             params.topMargin = (count / mColumnCount) * (mImageHeight + mImagePadding);
@@ -153,32 +163,38 @@ public class YNineAddImageView extends YNineImageView {
                     mLastY = (int) event.getRawY();
                     return false;
                 case MotionEvent.ACTION_MOVE:
-                    isMoving = true;
-                    if (canMoved) {
-                        mRemoveImageView.setVisibility(View.GONE);
-                        imageView.bringToFront();
-                        LayoutParams param = (LayoutParams) imageView.getLayoutParams();
-                        int dx = (int) event.getRawX() - mLastX;
-                        int dy = (int) event.getRawY() - mLastY;
-                        int left = max(min(param.leftMargin + dx, mMaxLeft), 0);
-                        int top = max(min(param.topMargin + dy, mMaxTop), 0);
-                        int position = getPosition(left, top);
-                        if (position >= 0 && position != mCurrentPosition) {
-                            mCurrentPosition = position;
-                            mImageViews.remove(imageView);
-                            if (position < mImageViews.size()) {
-                                mImageViews.add(mCurrentPosition, imageView);
-                            } else {
-                                mImageViews.add(imageView);
-                            }
-                            layoutSubViews();
+                    int dx = (int) event.getRawX() - mLastX;
+                    int dy = (int) event.getRawY() - mLastY;
+                    if (!isMoving) {
+                        if (dx > mClickRadius || dy > mClickRadius) {
+                            isMoving = true;
                         }
-                        param.leftMargin = left;
-                        param.topMargin = top;
-                        imageView.setLayoutParams(param);
-                        mLastX = (int) event.getRawX();
-                        mLastY = (int) event.getRawY();
-                        getParent().requestDisallowInterceptTouchEvent(true);
+                    }
+                    if (isMoving) {
+                        if (canMoved) {
+                            mRemoveImageView.setVisibility(View.GONE);
+                            imageView.bringToFront();
+                            LayoutParams param = (LayoutParams) imageView.getLayoutParams();
+                            int left = max(min(param.leftMargin + dx, mMaxLeft), 0);
+                            int top = max(min(param.topMargin + dy, mMaxTop), 0);
+                            int position = getPosition(left, top);
+                            if (position >= 0 && position != mCurrentPosition) {
+                                mCurrentPosition = position;
+                                mImageViews.remove(imageView);
+                                if (position < mImageViews.size()) {
+                                    mImageViews.add(mCurrentPosition, imageView);
+                                } else {
+                                    mImageViews.add(imageView);
+                                }
+                                layoutSubViews();
+                            }
+                            param.leftMargin = left;
+                            param.topMargin = top;
+                            imageView.setLayoutParams(param);
+                            getParent().requestDisallowInterceptTouchEvent(true);
+                            mLastX = (int) event.getRawX();
+                            mLastY = (int) event.getRawY();
+                        }
                     }
                     return true;
                 case MotionEvent.ACTION_UP:
