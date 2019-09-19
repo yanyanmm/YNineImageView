@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="YNineImageView">
         <attr format="dimension" name="nine_imagePadding"/>
+        <attr format="integer" name="nine_maxCount"/>
     </declare-styleable>
 </resources>

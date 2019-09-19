@@ -174,6 +174,7 @@ public class YNineImageView extends RelativeLayout {
         //资源配置读取值
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.YNineImageView);
         mImagePadding = typedArray.getDimensionPixelSize(R.styleable.YNineImageView_nine_imagePadding, mImagePadding);
+        mMaxCount = typedArray.getInt(R.styleable.YNineImageView_nine_maxCount, mMaxCount);
         typedArray.recycle();
     }
 
